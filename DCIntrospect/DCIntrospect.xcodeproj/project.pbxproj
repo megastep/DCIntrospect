@@ -142,7 +142,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastUpgradeCheck = 0420;
-				ORGANIZATIONNAME = "Codehost, Inc.";
+				ORGANIZATIONNAME = "Catloaf Software, LLC";
 			};
 			buildConfigurationList = EAE9877B14BC1780007A1C1D /* Build configuration list for PBXProject "DCIntrospect" */;
 			compatibilityVersion = "Xcode 3.2";
