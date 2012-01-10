@@ -1,0 +1,310 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		EAE9878514BC1780007A1C1D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAE9878414BC1780007A1C1D /* Foundation.framework */; };
+		EAE9879B14BC183D007A1C1D /* DCCrossHairView.h in Headers */ = {isa = PBXBuildFile; fileRef = EAE9879414BC183B007A1C1D /* DCCrossHairView.h */; };
+		EAE9879C14BC183D007A1C1D /* DCCrossHairView.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE9879514BC183B007A1C1D /* DCCrossHairView.m */; };
+		EAE9879D14BC183D007A1C1D /* DCFrameView.h in Headers */ = {isa = PBXBuildFile; fileRef = EAE9879614BC183B007A1C1D /* DCFrameView.h */; };
+		EAE9879E14BC183D007A1C1D /* DCFrameView.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE9879714BC183C007A1C1D /* DCFrameView.m */; };
+		EAE9879F14BC183D007A1C1D /* DCIntrospectSettings.h in Headers */ = {isa = PBXBuildFile; fileRef = EAE9879814BC183C007A1C1D /* DCIntrospectSettings.h */; };
+		EAE987A014BC183D007A1C1D /* DCStatusBarOverlay.h in Headers */ = {isa = PBXBuildFile; fileRef = EAE9879914BC183C007A1C1D /* DCStatusBarOverlay.h */; };
+		EAE987A114BC183D007A1C1D /* DCStatusBarOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE9879A14BC183C007A1C1D /* DCStatusBarOverlay.m */; };
+		EAE987A614BC18FD007A1C1D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EAE987A514BC18FD007A1C1D /* UIKit.framework */; };
+		EAE987A914BC198C007A1C1D /* DCIntrospect.h in Headers */ = {isa = PBXBuildFile; fileRef = EAE987A714BC198C007A1C1D /* DCIntrospect.h */; };
+		EAE987AA14BC198C007A1C1D /* DCIntrospect.m in Sources */ = {isa = PBXBuildFile; fileRef = EAE987A814BC198C007A1C1D /* DCIntrospect.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		EAE9878114BC1780007A1C1D /* libDCIntrospect.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libDCIntrospect.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAE9878414BC1780007A1C1D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		EAE9878814BC1780007A1C1D /* DCIntrospect-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "DCIntrospect-Prefix.pch"; sourceTree = "<group>"; };
+		EAE9879414BC183B007A1C1D /* DCCrossHairView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCCrossHairView.h; sourceTree = SOURCE_ROOT; };
+		EAE9879514BC183B007A1C1D /* DCCrossHairView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCCrossHairView.m; sourceTree = SOURCE_ROOT; };
+		EAE9879614BC183B007A1C1D /* DCFrameView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCFrameView.h; sourceTree = SOURCE_ROOT; };
+		EAE9879714BC183C007A1C1D /* DCFrameView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCFrameView.m; sourceTree = SOURCE_ROOT; };
+		EAE9879814BC183C007A1C1D /* DCIntrospectSettings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCIntrospectSettings.h; sourceTree = SOURCE_ROOT; };
+		EAE9879914BC183C007A1C1D /* DCStatusBarOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCStatusBarOverlay.h; sourceTree = SOURCE_ROOT; };
+		EAE9879A14BC183C007A1C1D /* DCStatusBarOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCStatusBarOverlay.m; sourceTree = SOURCE_ROOT; };
+		EAE987A514BC18FD007A1C1D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		EAE987A714BC198C007A1C1D /* DCIntrospect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DCIntrospect.h; sourceTree = SOURCE_ROOT; };
+		EAE987A814BC198C007A1C1D /* DCIntrospect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DCIntrospect.m; sourceTree = SOURCE_ROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EAE9877E14BC1780007A1C1D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAE987A614BC18FD007A1C1D /* UIKit.framework in Frameworks */,
+				EAE9878514BC1780007A1C1D /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		EAE9877614BC1780007A1C1D = {
+			isa = PBXGroup;
+			children = (
+				EAE9878614BC1780007A1C1D /* DCIntrospect */,
+				EAE9878314BC1780007A1C1D /* Frameworks */,
+				EAE9878214BC1780007A1C1D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		EAE9878214BC1780007A1C1D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EAE9878114BC1780007A1C1D /* libDCIntrospect.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EAE9878314BC1780007A1C1D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EAE987A514BC18FD007A1C1D /* UIKit.framework */,
+				EAE9878414BC1780007A1C1D /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EAE9878614BC1780007A1C1D /* DCIntrospect */ = {
+			isa = PBXGroup;
+			children = (
+				EAE987A714BC198C007A1C1D /* DCIntrospect.h */,
+				EAE987A814BC198C007A1C1D /* DCIntrospect.m */,
+				EAE9879414BC183B007A1C1D /* DCCrossHairView.h */,
+				EAE9879514BC183B007A1C1D /* DCCrossHairView.m */,
+				EAE9879614BC183B007A1C1D /* DCFrameView.h */,
+				EAE9879714BC183C007A1C1D /* DCFrameView.m */,
+				EAE9879814BC183C007A1C1D /* DCIntrospectSettings.h */,
+				EAE9879914BC183C007A1C1D /* DCStatusBarOverlay.h */,
+				EAE9879A14BC183C007A1C1D /* DCStatusBarOverlay.m */,
+				EAE9878714BC1780007A1C1D /* Supporting Files */,
+			);
+			path = DCIntrospect;
+			sourceTree = "<group>";
+		};
+		EAE9878714BC1780007A1C1D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EAE9878814BC1780007A1C1D /* DCIntrospect-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXHeadersBuildPhase section */
+		EAE9877F14BC1780007A1C1D /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAE9879B14BC183D007A1C1D /* DCCrossHairView.h in Headers */,
+				EAE9879D14BC183D007A1C1D /* DCFrameView.h in Headers */,
+				EAE9879F14BC183D007A1C1D /* DCIntrospectSettings.h in Headers */,
+				EAE987A014BC183D007A1C1D /* DCStatusBarOverlay.h in Headers */,
+				EAE987A914BC198C007A1C1D /* DCIntrospect.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXHeadersBuildPhase section */
+
+/* Begin PBXNativeTarget section */
+		EAE9878014BC1780007A1C1D /* DCIntrospect */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EAE9878E14BC1780007A1C1D /* Build configuration list for PBXNativeTarget "DCIntrospect" */;
+			buildPhases = (
+				EAE9877D14BC1780007A1C1D /* Sources */,
+				EAE9877E14BC1780007A1C1D /* Frameworks */,
+				EAE9877F14BC1780007A1C1D /* Headers */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = DCIntrospect;
+			productName = DCIntrospect;
+			productReference = EAE9878114BC1780007A1C1D /* libDCIntrospect.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EAE9877814BC1780007A1C1D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "Codehost, Inc.";
+			};
+			buildConfigurationList = EAE9877B14BC1780007A1C1D /* Build configuration list for PBXProject "DCIntrospect" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = EAE9877614BC1780007A1C1D;
+			productRefGroup = EAE9878214BC1780007A1C1D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EAE9878014BC1780007A1C1D /* DCIntrospect */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EAE9877D14BC1780007A1C1D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EAE9879C14BC183D007A1C1D /* DCCrossHairView.m in Sources */,
+				EAE9879E14BC183D007A1C1D /* DCFrameView.m in Sources */,
+				EAE987A114BC183D007A1C1D /* DCStatusBarOverlay.m in Sources */,
+				EAE987AA14BC198C007A1C1D /* DCIntrospect.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		EAE9878C14BC1780007A1C1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		EAE9878D14BC1780007A1C1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EAE9878F14BC1780007A1C1D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/DCIntrospect.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DCIntrospect-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		EAE9879014BC1780007A1C1D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/DCIntrospect.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DCIntrospect-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+		EAE987A314BC18A1007A1C1D /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = (
+					armv6,
+					armv7,
+				);
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 3.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Distribution;
+		};
+		EAE987A414BC18A1007A1C1D /* Distribution */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DSTROOT = /tmp/DCIntrospect.dst;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "DCIntrospect-Prefix.pch";
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Distribution;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EAE9877B14BC1780007A1C1D /* Build configuration list for PBXProject "DCIntrospect" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EAE9878C14BC1780007A1C1D /* Debug */,
+				EAE9878D14BC1780007A1C1D /* Release */,
+				EAE987A314BC18A1007A1C1D /* Distribution */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EAE9878E14BC1780007A1C1D /* Build configuration list for PBXNativeTarget "DCIntrospect" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EAE9878F14BC1780007A1C1D /* Debug */,
+				EAE9879014BC1780007A1C1D /* Release */,
+				EAE987A414BC18A1007A1C1D /* Distribution */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EAE9877814BC1780007A1C1D /* Project object */;
+}
