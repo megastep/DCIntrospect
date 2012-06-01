@@ -88,7 +88,7 @@ DCIntrospect *sharedInstance = nil;
 	if (simulatorRoot)
 	{
 		void *AppSupport = dlopen([[simulatorRoot stringByAppendingPathComponent:@"/System/Library/PrivateFrameworks/AppSupport.framework/AppSupport"] fileSystemRepresentation], RTLD_LAZY);
-		CFStringRef (*CPCopySharedResourcesPreferencesDomainForDomain)(CFStringRef domain) = dlsym(AppSupport, "CPCopySharedResourcesPreferencesDomainForDomain");
+		CFStringRef (*CPCopySharedResourcesPreferencesDomainForDomain)(CFStringRef domain) = (CFStringRef (*)())dlsym(AppSupport, "CPCopySharedResourcesPreferencesDomainForDomain");
 		if (CPCopySharedResourcesPreferencesDomainForDomain)
 		{
 			CFStringRef accessibilityDomain = CPCopySharedResourcesPreferencesDomainForDomain(CFSTR("com.apple.Accessibility"));
@@ -124,7 +124,7 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 		free(properties);
 	}
 	
-	IMP valueForKey = [objc_getAssociatedObject([self class], originalValueForKeyIMPKey) pointerValue];
+	IMP valueForKey = (IMP)[objc_getAssociatedObject([self class], originalValueForKeyIMPKey) pointerValue];
 	if ([textInputTraitsProperties containsObject:key])
 	{
 		id textInputTraits = valueForKey(self, _cmd, @"textInputTraits");
@@ -151,11 +151,11 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 		{
 			IMP originalValueForKey = class_replaceMethod(class, @selector(valueForKey:), (IMP)UITextInputTraits_valueForKey, valueForKeyTypeEncoding);
 			if (!originalValueForKey)
-				originalValueForKey = [objc_getAssociatedObject([class superclass], originalValueForKeyIMPKey) pointerValue];
+				originalValueForKey = (IMP)[objc_getAssociatedObject([class superclass], originalValueForKeyIMPKey) pointerValue];
 			if (!originalValueForKey)
 				originalValueForKey = class_getMethodImplementation([class superclass], @selector(valueForKey:));
 			
-			objc_setAssociatedObject(class, originalValueForKeyIMPKey, [NSValue valueWithPointer:originalValueForKey], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+			objc_setAssociatedObject(class, originalValueForKeyIMPKey, [NSValue valueWithPointer:(void *)originalValueForKey], OBJC_ASSOCIATION_RETAIN_NONATOMIC);
 		}
 	}
 	free(classes);
@@ -215,13 +215,22 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 													  object:nil
 													   queue:nil
 												  usingBlock:^(NSNotification *notification) {
-													  // needs to be done after a delay or else it doesn't work for some reason.
 													  if (self.keyboardBindingsOn)
+														{
 														  [self performSelector:@selector(takeFirstResponder)
-																	 withObject:nil
-																	 afterDelay:0.1];
+																				 withObject:nil
+																				 afterDelay:[[[notification userInfo] objectForKey:UIKeyboardAnimationDurationUserInfoKey] floatValue]];
+														}
 												  }];
 	
+  // dirty hack for UIWebView keyboard problems
+  [[NSNotificationCenter defaultCenter] addObserverForName:UIKeyboardWillShowNotification
+                                                    object:nil
+                                                     queue:nil
+                                                usingBlock:^(NSNotification *notification) {
+                                                  [NSObject cancelPreviousPerformRequestsWithTarget:self selector:@selector(takeFirstResponder) object:nil];
+                                                }];
+
 	// listen for device orientation changes to adjust the status bar
 	[[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateViews) name:UIDeviceOrientationDidChangeNotification object:nil];
@@ -259,9 +268,9 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 	[mainWindow addGestureRecognizer:invokeGestureRecognizer];
 }
 
-- (void)setKeyboardBindingsOn:(BOOL)newKeyboardBindingsOn
+- (void)setKeyboardBindingsOn:(BOOL)areKeyboardBindingsOn
 {
-	keyboardBindingsOn = newKeyboardBindingsOn;
+	keyboardBindingsOn = areKeyboardBindingsOn;
 	if (self.keyboardBindingsOn)
 		[self.inputTextView becomeFirstResponder];
 	else
@@ -280,7 +289,7 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 		[self updateStatusBar];
 		[self updateFrameView];
 		
-		if (keyboardBindingsOn)
+		if (self.keyboardBindingsOn)
 			[self.inputTextView becomeFirstResponder];
 		else
 			[self.inputTextView resignFirstResponder];
@@ -413,6 +422,15 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 
 - (BOOL)textView:(UITextView *)textView shouldChangeTextInRange:(NSRange)range replacementText:(NSString *)string
 {
+	if ([string isEqualToString:kDCIntrospectKeysDisableForPeriod])
+  {
+    [self setKeyboardBindingsOn:NO];
+    [[self inputTextView] resignFirstResponder];
+    NSLog(@"DCIntrospect: Disabled for %.1f seconds", kDCIntrospectTemporaryDisableDuration);
+    [self performSelector:@selector(setKeyboardBindingsOn:) withObject:[NSNumber numberWithFloat:YES] afterDelay:kDCIntrospectTemporaryDisableDuration];
+    return NO;
+  }
+
 	if ([string isEqualToString:kDCIntrospectKeysInvoke])
 	{
 		[self invokeIntrospector];
@@ -428,7 +446,7 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 		return NO;
 	}
 	
-	if ([string isEqualToString:kDCIntrospectKeysToggleViewOutlines])
+  if ([string isEqualToString:kDCIntrospectKeysToggleViewOutlines])
 	{
 		[self toggleOutlines];
 		return NO;
@@ -1398,10 +1416,6 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 	Class objectClass = [object class];
 	NSString *className = [NSString stringWithFormat:@"%@", objectClass];
 	
-	unsigned int count;
-	objc_property_t *properties = class_copyPropertyList(objectClass, &count);
-    size_t buf_size = 1024;
-    char *buffer = malloc(buf_size);
 	NSMutableString *outputString = [NSMutableString stringWithFormat:@"\n\n** %@", className];
 	
 	// list the class heirachy
@@ -1411,73 +1425,91 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 		[outputString appendFormat:@" : %@", superClass];
 		superClass = [superClass superclass];
 	}
+	[outputString appendString:@" ** \n"];
+
+	// dump properties of class and super classes, up to UIView
+	NSMutableString *propertyString = [NSMutableString string];
 	
-	[outputString appendString:@" ** \n\n"];
-	
-	if ([objectClass isSubclassOfClass:UIView.class])
+	Class inspectClass = objectClass;
+	while (inspectClass)
 	{
-		UIView *view = (UIView *)object;
-		// print out generic uiview properties
-		[outputString appendString:@"  ** UIView properties **\n"];
-		[outputString appendFormat:@"    tag: %i\n", view.tag];
-		[outputString appendFormat:@"    frame: %@ | ", NSStringFromCGRect(view.frame)];
-		[outputString appendFormat:@"bounds: %@ | ", NSStringFromCGRect(view.bounds)];
-		[outputString appendFormat:@"center: %@\n", NSStringFromCGPoint(view.center)];
-		[outputString appendFormat:@"    transform: %@\n", NSStringFromCGAffineTransform(view.transform)];
-		[outputString appendFormat:@"    autoresizingMask: %@\n", [self describeProperty:@"autoresizingMask" value:[NSNumber numberWithInt:view.autoresizingMask]]];
-		[outputString appendFormat:@"    autoresizesSubviews: %@\n", (view.autoresizesSubviews) ? @"YES" : @"NO"];
-		[outputString appendFormat:@"    contentMode: %@ | ", [self describeProperty:@"contentMode" value:[NSNumber numberWithInt:view.contentMode]]];
-		[outputString appendFormat:@"contentStretch: %@\n", NSStringFromCGRect(view.contentStretch)];
-		[outputString appendFormat:@"    backgroundColor: %@\n", [self describeColor:view.backgroundColor]];
-		[outputString appendFormat:@"    alpha: %.2f | ", view.alpha];
-		[outputString appendFormat:@"opaque: %@ | ", (view.opaque) ? @"YES" : @"NO"];
-		[outputString appendFormat:@"hidden: %@ | ", (view.hidden) ? @"YES" : @"NO"];
-		[outputString appendFormat:@"clips to bounds: %@ | ", (view.clipsToBounds) ? @"YES" : @"NO"];
-		[outputString appendFormat:@"clearsContextBeforeDrawing: %@\n", (view.clearsContextBeforeDrawing) ? @"YES" : @"NO"];
-		[outputString appendFormat:@"    userInteractionEnabled: %@ | ", (view.userInteractionEnabled) ? @"YES" : @"NO"];
-		[outputString appendFormat:@"multipleTouchEnabled: %@\n", (view.multipleTouchEnabled) ? @"YES" : @"NO"];
-		[outputString appendFormat:@"    gestureRecognizers: %@\n", (view.gestureRecognizers) ? [view.gestureRecognizers description] : @"nil"];
-		
-		[outputString appendString:@"\n"];
-	}
-	
-	[outputString appendFormat:@"  ** %@ properties **\n", objectClass];
-	
-	if (objectClass == UIScrollView.class || objectClass == UIButton.class)
-	{
-		[outputString appendString:@"    Logging properties not currently supported for this view.\n"];
-	}
-	else
-	{
-		
-		for (unsigned int i = 0; i < count; ++i)
+		NSMutableString *objectString = [NSMutableString string];
+		[objectString appendFormat:@"\n  ** %@ properties **\n", inspectClass];
+
+		if (inspectClass == UIView.class)
 		{
-			// get the property name and selector name
-			NSString *propertyName = [NSString stringWithCString:property_getName(properties[i]) encoding:NSUTF8StringEncoding];
-			
-			SEL sel = NSSelectorFromString(propertyName);
-			if ([object respondsToSelector:sel])
-			{
-				NSString *propertyDescription;
-				@try
-				{
-					// get the return object and type for the selector
-					NSString *returnType = [NSString stringWithUTF8String:[[object methodSignatureForSelector:sel] methodReturnType]];
-					id returnObject = [object valueForKey:propertyName];
-					if ([returnType isEqualToString:@"c"])
-						returnObject = [NSNumber numberWithBool:[returnObject intValue] != 0];
-					
-					propertyDescription = [self describeProperty:propertyName value:returnObject];
-				}
-				@catch (NSException *exception)
-				{
-					// Non KVC compliant properties, see also +workaroundUITextInputTraitsPropertiesBug
-					propertyDescription = @"N/A";
-				}
-				[outputString appendFormat:@"    %@: %@\n", propertyName, propertyDescription];
-			}
+			UIView *view = (UIView *)object;
+			// print out generic uiview properties
+			[objectString appendFormat:@"    tag: %i\n", view.tag];
+			[objectString appendFormat:@"    frame: %@ | ", NSStringFromCGRect(view.frame)];
+			[objectString appendFormat:@"bounds: %@ | ", NSStringFromCGRect(view.bounds)];
+			[objectString appendFormat:@"center: %@\n", NSStringFromCGPoint(view.center)];
+			[objectString appendFormat:@"    transform: %@\n", NSStringFromCGAffineTransform(view.transform)];
+			[objectString appendFormat:@"    autoresizingMask: %@\n", [self describeProperty:@"autoresizingMask" value:[NSNumber numberWithInt:view.autoresizingMask]]];
+			[objectString appendFormat:@"    autoresizesSubviews: %@\n", (view.autoresizesSubviews) ? @"YES" : @"NO"];
+			[objectString appendFormat:@"    contentMode: %@ | ", [self describeProperty:@"contentMode" value:[NSNumber numberWithInt:view.contentMode]]];
+			[objectString appendFormat:@"contentStretch: %@\n", NSStringFromCGRect(view.contentStretch)];
+			[objectString appendFormat:@"    backgroundColor: %@\n", [self describeColor:view.backgroundColor]];
+			[objectString appendFormat:@"    alpha: %.2f | ", view.alpha];
+			[objectString appendFormat:@"opaque: %@ | ", (view.opaque) ? @"YES" : @"NO"];
+			[objectString appendFormat:@"hidden: %@ | ", (view.hidden) ? @"YES" : @"NO"];
+			[objectString appendFormat:@"clips to bounds: %@ | ", (view.clipsToBounds) ? @"YES" : @"NO"];
+			[objectString appendFormat:@"clearsContextBeforeDrawing: %@\n", (view.clearsContextBeforeDrawing) ? @"YES" : @"NO"];
+			[objectString appendFormat:@"    userInteractionEnabled: %@ | ", (view.userInteractionEnabled) ? @"YES" : @"NO"];
+			[objectString appendFormat:@"multipleTouchEnabled: %@\n", (view.multipleTouchEnabled) ? @"YES" : @"NO"];
+			[objectString appendFormat:@"    gestureRecognizers: %@\n", (view.gestureRecognizers) ? [view.gestureRecognizers description] : @"nil"];
 		}
+		else
+		{
+			// Dump all properties of the class
+			unsigned int count;
+			objc_property_t *properties = class_copyPropertyList(inspectClass, &count);
+			size_t buf_size = 1024;
+			char *buffer = malloc(buf_size);
+			
+			for (unsigned int i = 0; i < count; ++i)
+			{
+				// get the property name and selector name
+				NSString *propertyName = [NSString stringWithCString:property_getName(properties[i]) encoding:NSUTF8StringEncoding];
+				
+				SEL sel = NSSelectorFromString(propertyName);
+				if ([object respondsToSelector:sel])
+				{
+					NSString *propertyDescription;
+					@try
+					{
+						// get the return object and type for the selector
+						NSString *returnType = [NSString stringWithUTF8String:[[object methodSignatureForSelector:sel] methodReturnType]];
+						id returnObject = [object valueForKey:propertyName];
+						if ([returnType isEqualToString:@"c"])
+							returnObject = [NSNumber numberWithBool:[returnObject intValue] != 0];
+						
+						propertyDescription = [self describeProperty:propertyName value:returnObject];
+					}
+					@catch (NSException *exception)
+					{
+						// Non KVC compliant properties, see also +workaroundUITextInputTraitsPropertiesBug
+						propertyDescription = @"N/A";
+					}
+					[objectString appendFormat:@"    %@: %@\n", propertyName, propertyDescription];
+				}
+			}
+			
+			free(properties);
+			free(buffer);
+		}
+		
+		[propertyString insertString:objectString atIndex:0];
+		
+		if (inspectClass == UIView.class)
+		{
+			break;
+		}
+
+		inspectClass = [inspectClass superclass];
 	}
+	
+	[outputString appendString:propertyString];
 	
 	// list targets if there are any
 	if ([object respondsToSelector:@selector(allTargets)])
@@ -1498,9 +1530,6 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 	
 	[outputString appendString:@"\n"];
 	NSLog(@"DCIntrospect: %@", outputString);
-	
-	free(properties);
-    free(buffer);
 }
 
 - (void)logAccessabilityPropertiesForObject:(id)object
