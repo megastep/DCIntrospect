@@ -141,7 +141,7 @@
 		EAE9877814BC1780007A1C1D /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = "Catloaf Software, LLC";
 			};
 			buildConfigurationList = EAE9877B14BC1780007A1C1D /* Build configuration list for PBXProject "DCIntrospect" */;
