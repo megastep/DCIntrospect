@@ -533,7 +533,7 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 			if (self.currentViewHistory.count == 0)
 				return NO;
 			
-			int indexOfCurrentView = [self.currentViewHistory indexOfObject:self.currentView];
+			NSUInteger indexOfCurrentView = [self.currentViewHistory indexOfObject:self.currentView];
 			if (indexOfCurrentView == 0)
 			{
 				NSLog(@"DCIntrospect: At bottom of view history.");
@@ -774,7 +774,7 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 			nameForObject = [nameForObject substringFromIndex:@"self.".length];
 		
 		if (self.currentView.tag != 0)
-			self.statusBarOverlay.leftLabel.text = [NSString stringWithFormat:@"%@ (tag: %i)", nameForObject, self.currentView.tag];
+			self.statusBarOverlay.leftLabel.text = [NSString stringWithFormat:@"%@ (tag: %li)", nameForObject, (long)self.currentView.tag];
 		else
 			self.statusBarOverlay.leftLabel.text = [NSString stringWithFormat:@"%@", nameForObject];
 		
@@ -1440,7 +1440,7 @@ id UITextInputTraits_valueForKey(id self, SEL _cmd, NSString *key)
 		{
 			UIView *view = (UIView *)object;
 			// print out generic uiview properties
-			[objectString appendFormat:@"    tag: %i\n", view.tag];
+			[objectString appendFormat:@"    tag: %li\n", (long)view.tag];
 			[objectString appendFormat:@"    frame: %@ | ", NSStringFromCGRect(view.frame)];
 			[objectString appendFormat:@"bounds: %@ | ", NSStringFromCGRect(view.bounds)];
 			[objectString appendFormat:@"center: %@\n", NSStringFromCGPoint(view.center)];
