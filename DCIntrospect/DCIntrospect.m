@@ -16,6 +16,7 @@
 // break into GDB code complied from following sources: 
 // http://blog.timac.org/?p=190, http://developer.apple.com/library/mac/#qa/qa1361/_index.html, http://cocoawithlove.com/2008/03/break-into-debugger.html
 
+#if !TARGET_CPU_ARM64
 // Returns true if the current process is being debugged (either 
 // running under the debugger or has a debugger attached post facto).
 static bool AmIBeingDebugged(void)
@@ -48,6 +49,7 @@ static bool AmIBeingDebugged(void)
 
 	return ( (info.kp_proc.p_flag & P_TRACED) != 0 );
 }
+#endif
 
 #if TARGET_CPU_ARM
 #define DEBUGSTOP(signal) __asm__ __volatile__ ("mov r0, %0\nmov r1, %1\nmov r12, %2\nswi 128\n" : : "r"(getpid ()), "r"(signal), "r"(37) : "r12", "r0", "r1", "cc");
